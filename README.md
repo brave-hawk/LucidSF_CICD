@@ -1,18 +1,14 @@
-# Salesforce DX Project: Next Steps
+# Lucid SF CI/CD demo
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+This is a demo project to learn about CI/CD in the Salesforce Environment. 
 
-## How Do You Plan to Deploy Your Changes?
+## The plan to deploy changes
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+I shall be using the Org development model, as it is what I am most familiar with.
 
-## Configure Your Salesforce DX Project
+I have 3 orgs: LucidSF_Prod, LucidSF_Integration and LucidSF_Develop.
 
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
+These are all developer edition orgs, but will mimic the Production, Integration and Development environments respectively.
 
-## Read All About It
+The repo has been initialized from a freshly minted org, and will be tracking mostly Apex class files, Flows, Flexipages, Objects and LWC components.
 
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
