@@ -33,6 +33,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
+      # Fix the eslint parser error
+      - name: "Ignore engines from yarn"
+        run: |
+          echo "Ignore engines"
+          yarn config set ignore-engines true
 
       # The idea is that the VM can access your remote repository
       # because your repository is an sfdx project.
