@@ -31,7 +31,21 @@ In the workflows folder create a file called **pr-develop-branch.yml**
 
 The content to be put in that file can be found in this repo.
 
+### Testing the action
 
+Navigate back to the Github repo. On the actions tab, we can see our new action: **Validate PR on develop branch**
+
+Create a new develop branch from the main branch.
+
+From the develop branch, create a new feature branch, example:
+
+```
+feature/SFDC-Trigger-Framework
+```
+
+Add some changes. In our example, add the TriggerHandler class and the associated test class.
+
+Commit and push these to the develop branch.
 
 
 
