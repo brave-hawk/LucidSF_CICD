@@ -12,3 +12,7 @@ These are all developer edition orgs, but will mimic the Production, Integration
 
 The repo has been initialized from a freshly minted org, and will be tracking mostly Apex class files, Flows, Flexipages, Objects and LWC components.
 
+## Steps to reproduce:
+
+The steps can be found [here](LucidSF_CICD/blob/main/STEPS.md)
+
