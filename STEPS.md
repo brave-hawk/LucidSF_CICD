@@ -1,6 +1,6 @@
 # Steps to reproduce this CI/CD demo
 
-The following steps are required to realize this CI/CD setup 
+The following steps are required to realize this CI/CD setup
 
 ## Prepare the Integration pull-request github actions
 
@@ -31,8 +31,32 @@ In the workflows folder create a file called **pr-develop-branch.yml**
 
 The content to be put in that file can be found in this repo.
 
+In the project root, also add the parsePR.js file found in this repo
 
+### Test the PR action
 
+Create a **develop** branch from the main branch
 
+From the **develop** branch, create a feature branch called:
 
+```
+feature/SFDC-Trigger-Framework
+```
 
+Make some changes to it: example, add the Apex classes from the TriggerHandler framework (found in this repo)
+
+In the PR body, be sure to add
+
+```
+Apex::[all]::Apex
+```
+
+to run all tests
+
+or
+
+```
+Apex::[TriggerHandler_Test]::Apex
+```
+
+to run only this specific test
