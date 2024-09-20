@@ -14,5 +14,5 @@ The repo has been initialized from a freshly minted org, and will be tracking mo
 
 ## Steps to reproduce:
 
-The steps can be found [here](LucidSF_CICD/blob/main/STEPS.md)
+The steps can be found [here](./STEPS.md)
 
