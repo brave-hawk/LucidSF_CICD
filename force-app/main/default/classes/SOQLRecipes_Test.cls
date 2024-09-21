@@ -33,7 +33,7 @@ private class SOQLRecipes_Test {
       System.Assert.areEqual(
         1,
         testAccounts.size(),
-        'Expected to find one account.'
+        'Expected to find one account...'
       );
     }
   }
