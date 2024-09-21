@@ -43,6 +43,10 @@ jobs:
       # changed between commits, so that we can only deploy that metadata
       # to the destination org
 
+      # To make the commit SHAs visible to sf sgd source delta, set a safe folder
+      # The safe folder can be found in your actions log
+      # Otherwise, you might have the following error:
+      # "error": "--to is not a valid sha pointer: 'HEAD'
       - name: "Set safe folder"
         run: git config --global --add safe.directory /__w/LucidSF_CICD/LucidSF_CICD
 
@@ -129,7 +133,7 @@ jobs:
       - name: "Create delta packages for new, modified or deleted metadata"
         run: |
           mkdir changed-sources          
-          sf sgd source delta --to ec97a0620861f2359c110487a32e476958826c99 --from ed3cad10f8c1a800fb6bb2638a7787d8d78d6a89 --output changed-sources/ --generate-delta --source force-app/
+          sf sgd source delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
           echo "--- package.xml generated with added/changed metadata: ---"
           cat changed-sources/package/package.xml
           echo 
@@ -172,4 +176,4 @@ jobs:
           sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30
 
       - name: "Deploy destructive changes (if any)"
-        run: sf project deploy start --source-dir "changed-sources/destructiveChanges" --dry-run --ignorewarnings
+        run: sf project deploy start --source-dir "changed-sources/destructiveChanges" --dry-run --ignore-warnings
