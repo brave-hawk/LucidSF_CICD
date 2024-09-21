@@ -129,7 +129,7 @@ jobs:
           find .git -type f
           echo "###### END: TEST refs HEAD #######"
           mkdir changed-sources          
-          sf sgd source delta --to 6459edf4ef65f931a0156d6b31f8cfbdf88e17fb --from c749ca931a2915afeaf1b0a43df0470fae0a379b --output changed-sources/ --generate-delta --source force-app/
+          sf sgd source delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
           echo "--- package.xml generated with added/changed metadata: ---"
           cat changed-sources/package/package.xml
           echo 
