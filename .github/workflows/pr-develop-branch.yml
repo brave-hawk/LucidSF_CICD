@@ -170,7 +170,7 @@ jobs:
         with:
           sarif_file: changed-sources/apexScanResults.sarif
 
-      # We do a check-only deploy and we only run the tests specified in the PR
+      # We do a validate deploy and we only run the tests specified in the PR
       # If the env variable does not equal 'all', we know that there is a list of
       # tests that can be run
 
@@ -178,13 +178,20 @@ jobs:
         if: ${{ env.APEX_TESTS != 'all' }}
         run: |
           echo ${{env.APEX_TESTS}}
-          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunSpecifiedTests --runtests ${{env.APEX_TESTS}} --json
+          sf project deploy validate --source-dir "changed-sources/force-app" --test-level RunSpecifiedTests --tests ${{env.APEX_TESTS}} -w 30 --coverage-formatters lcovonly --verbose
 
       # If the env variable equals all, we run all tests
       - name: "Check-only deploy delta changes - run all tests"
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-          sfdx force:source:deploy -p "changed-sources/force-app" --checkonly --testlevel RunLocalTests  --json
+          sf project deploy validate --source-dir "changed-sources/force-app" --test-level RunLocalTests -w 30 --coverage-formatters lcovonly --verbose
+
+      # Upload code coverage data
+      - name: "Upload code coverage for Apex to Codecov.io"
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: Apex
 
       - name: "Deploy destructive changes (if any)"
         run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
