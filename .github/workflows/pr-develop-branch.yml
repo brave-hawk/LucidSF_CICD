@@ -126,6 +126,9 @@ jobs:
       - name: "Create delta packages for new, modified or deleted metadata"
         run: |
           mkdir changed-sources
+          echo "###### TEST refs HEAD #######"
+          cat .git/refs/remotes/origin/HEAD
+          echo "###### END: TEST refs HEAD #######"
           sf sgd source delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
           echo "--- package.xml generated with added/changed metadata: ---"
           cat changed-sources/package/package.xml
