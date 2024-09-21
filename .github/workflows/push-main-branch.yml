@@ -50,6 +50,21 @@ jobs:
       - name: "Authenticate to Production Org"
         run: sfdx auth:sfdxurl:store -f ./SFDX_PRODUCTION_URL.txt -s -a production
 
+      # Run tests for codecov
+      # Deploy test results are unusable to codecov due to the 'filename="no-map/Classname' which seems deliberate
+      # See bug: https://github.com/forcedotcom/cli/issues/1725
+      # See also: https://github.com/forcedotcom/salesforcedx-vscode/issues/5337#issuecomment-1893735430
+      - name: "Run Tests to get overall org coverage for reporting"
+        run: sf apex test run --code-coverage --test-level RunLocalTests --result-format human --output-dir ./coverage -w 20
+
+      # Upload code coverage data
+      - name: "Upload code coverage for Apex to Codecov.io"
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: Apex
+          verbose: true
+
       - name: "Deploy the entire branch to Production org"
         run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
 

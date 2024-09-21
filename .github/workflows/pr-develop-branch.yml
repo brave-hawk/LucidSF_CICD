@@ -190,19 +190,5 @@ jobs:
         run: |
           sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters cobertura --verbose
 
-      - name: List files to find *Codecov* name
-        run: |
-          ls -R
-          cat coverage/coverage/cobertura.xml
-
-      # Upload code coverage data
-      - name: "Upload code coverage for Apex to Codecov.io"
-        uses: codecov/codecov-action@v4
-        with:
-          files: coverage/coverage/cobertura.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: Apex
-          verbose: true
-
       - name: "Deploy destructive changes (if any)"
         run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
