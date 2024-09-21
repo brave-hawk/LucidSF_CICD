@@ -176,4 +176,4 @@ jobs:
           sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30
 
       - name: "Deploy destructive changes (if any)"
-        run: sf project deploy start --source-dir "changed-sources/destructiveChanges" --dry-run --ignore-warnings
+        run: sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --dry-run --ignore-warnings
