@@ -190,15 +190,14 @@ jobs:
         run: |
           sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters lcovonly --verbose
 
-      - name: List files to debug for *CodeCov*
-        run: ls -R
-
       # Upload code coverage data
       - name: "Upload code coverage for Apex to Codecov.io"
         uses: codecov/codecov-action@v4
         with:
+          files: /coverage/coverage/lcovonly.info
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: Apex
+          verbose: true
 
       - name: "Deploy destructive changes (if any)"
         run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
