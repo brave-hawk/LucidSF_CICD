@@ -43,6 +43,9 @@ jobs:
       # changed between commits, so that we can only deploy that metadata
       # to the destination org
 
+      - name: "Set safe folder"
+        run: git config --global --add safe.directory /__w/LucidSF_CICD/LucidSF_CICD
+
       - name: "Checkout source code"
         uses: actions/checkout@v4
         with:
@@ -123,9 +126,6 @@ jobs:
       # We use SFDX Git Delta to create a directory with only the metadata that has changed.
       # this allows us to deploy only those changes, as opposed to deploying the entire branch.
       # This helps reducing deployment times
-      #- name: 'Set safe folder'
-      #run: git config --global --add safe.directory /__w/core-platform/core-platform
-
       - name: "Create delta packages for new, modified or deleted metadata"
         run: |
           mkdir changed-sources          
