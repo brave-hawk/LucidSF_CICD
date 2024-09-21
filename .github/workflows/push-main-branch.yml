@@ -66,7 +66,7 @@ jobs:
           verbose: true
 
       - name: "Deploy the entire branch to Production org"
-        run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --json
+        run: sfdx force:source:deploy -p force-app --testlevel RunLocalTests --verbose
 
       - name: "Deploy destructive changes (if any) to Production org"
         run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
