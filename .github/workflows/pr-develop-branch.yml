@@ -176,17 +176,17 @@ jobs:
       # If the env variable does not equal 'all', we know that there is a list of
       # tests that can be run
 
-      - name: "Check-only deploy delta changes - run specified tests"
+      - name: "Dry-run deploy delta changes - run specified tests"
         if: ${{ env.APEX_TESTS != 'all' }}
         run: |
           echo ${{env.APEX_TESTS}}
-          sf project deploy validate --source-dir "changed-sources/force-app" --test-level RunSpecifiedTests --tests ${{env.APEX_TESTS}} -w 30 --coverage-formatters lcovonly --verbose
+          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunSpecifiedTests --tests ${{env.APEX_TESTS}} -w 30 --coverage-formatters lcovonly --verbose
 
       # If the env variable equals all, we run all tests
       - name: "Check-only deploy delta changes - run all tests"
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-          sf project deploy validate --source-dir "changed-sources/force-app" --test-level RunLocalTests -w 30 --coverage-formatters lcovonly --verbose
+          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters lcovonly --verbose
 
       # Upload code coverage data
       - name: "Upload code coverage for Apex to Codecov.io"
