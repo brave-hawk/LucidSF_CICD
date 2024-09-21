@@ -151,8 +151,6 @@ jobs:
         run: |
           mkdir changed-sources
           sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
-          echo "--- All Changes ---"
-          ls -R -h changed-sources
           echo "--- package.xml generated with added/changed metadata: ---"
           cat changed-sources/package/package.xml
           echo "--- destructiveChanges package.xml generated with deleted metadata: ---"
