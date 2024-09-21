@@ -1,5 +1,7 @@
 # Lucid SF CI/CD demo
 
+[![codecov](https://codecov.io/github/brave-hawk/LucidSF_CICD/branch/main/graph/badge.svg?token=DYLMGWNATC)](https://codecov.io/github/brave-hawk/LucidSF_CICD)
+
 This is a demo project to learn about CI/CD in the Salesforce Environment. 
 
 ## The plan to deploy changes
