@@ -188,7 +188,10 @@ jobs:
       - name: "Dry-run deploy delta changes - run all tests"
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters lcovonly --verbose
+          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters cobertura --verbose
+
+      - name: List files to find *Codecov* name
+        run: ls -R
 
       # Upload code coverage data
       - name: "Upload code coverage for Apex to Codecov.io"
