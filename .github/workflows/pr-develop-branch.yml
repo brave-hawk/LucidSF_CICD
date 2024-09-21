@@ -21,24 +21,16 @@ on:
 # Jobs to be executed when the above conditions are met
 jobs:
   # This is the name of the job. You can give it whatever name you want
-  validate-deployment-on-develop-org:
+  validate-deployment-on-integration-org:
     # As mentioned in the blog post, this job runs inside a VM. Here we
     # can specify which OS this VM should run on.
     # In this case, we are going to run our commands on the latest version
     # of ubuntu
     runs-on: ubuntu-latest
+    container:
+      image: salesforce/cli:latest-full
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      # Now we install nodejs in the VM, and specify version 14
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "18"
-      # Fix the eslint parser error
-      - name: "Ignore engines from yarn"
-        run: |
-          echo "Ignore engines"
-          yarn config set ignore-engines true
-
       # The idea is that the VM can access your remote repository
       # because your repository is an sfdx project.
       # This is a default action that allows us to enter the root
@@ -93,15 +85,6 @@ jobs:
           TESTS=$(cat testsToRun.txt)       
           echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-      # Now Install Salesforce CLI
-      - name: "Install Salesforce CLI"
-        run: |
-          wget https://developer.salesforce.com/media/salesforce-cli/sfdx/channels/stable/sfdx-linux-x64.tar.xz
-          mkdir ~/sfdx
-          tar xJf sfdx-linux-x64.tar.xz -C ~/sfdx --strip-components 1
-          echo "$HOME/sfdx/bin" >> $GITHUB_PATH
-          ~/sfdx/bin/sfdx version
-
       # Then we install the SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
       # This is an awesome plugin that allows us to extract a package.xml with the metadata
       # that has changed between commits. I highly recommend going over the github readme
@@ -109,18 +92,11 @@ jobs:
 
       - name: "Installing sfdx git delta"
         run: |
-          echo y | sfdx plugins:install sfdx-git-delta
-          sfdx plugins
-
-      # Install java as it is required for the next step
-      - name: "Installing java"
-        run: |
-          sudo apt-get update
-          sudo apt install default-jdk
+          echo y | sf plugins install sfdx-git-delta
 
       # Install SFDX scanner
       - name: "Installing SFDX scanner"
-        run: sfdx plugins:install @salesforce/sfdx-scanner
+        run: sf plugins install @salesforce/sfdx-scanner
 
       # Prior to setting up this workflow, you have to create a Github Secret
       # that contains the sfdx url of the integration/qa org.
@@ -128,7 +104,7 @@ jobs:
       # The steps to generate the url are here
       # https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_auth_sfdxurl.htm
 
-      # This URL can then be used with the sfdx auth:sfdxurl:store to authenticate
+      # This URL can then be used with the sf org login sfdx-url to authenticate
       # the sfdx project in the repositry, against the org from which the URL
       # was generated from. This works just like that, there's no need to create
       # connected apps or any else.
@@ -142,7 +118,7 @@ jobs:
 
       # Authenticate to org using the URL stored in the text file
       - name: "Authenticate to Integration Org"
-        run: sfdx auth:sfdxurl:store -f ./SFDX_INTEGRATION_URL.txt -s -a integration
+        run: sf org login sfdx-url -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
       # We use SFDX Git Delta to create a directory with only the metadata that has changed.
       # this allows us to deploy only those changes, as opposed to deploying the entire branch.
@@ -150,11 +126,13 @@ jobs:
       - name: "Create delta packages for new, modified or deleted metadata"
         run: |
           mkdir changed-sources
-          sfdx sgd:source:delta --to "HEAD" --from "HEAD^" --output changed-sources/ --generate-delta --source force-app/
+          sf sgd source delta --to "HEAD" --from "HEAD~1" --output changed-sources/ --generate-delta --source force-app/
           echo "--- package.xml generated with added/changed metadata: ---"
           cat changed-sources/package/package.xml
+          echo 
           echo "--- destructiveChanges package.xml generated with deleted metadata: ---"
           cat changed-sources/destructiveChanges/destructiveChanges.xml
+          echo
 
       # Now we can use the sfdx scanner to scan the code in the delta directory
       # The output of the scan is stored in a file called apexScanResults.sarif
@@ -165,7 +143,7 @@ jobs:
       - name: "Scan code"
         run: |
           cd changed-sources
-          sfdx scanner:run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
+          sf scanner run --format sarif --target './**/*.cls' --category "Design,Best Practices,Performance" --outfile 'apexScanResults.sarif'  
           cd ..
 
       # Now we upload the .sarif file as explained in the previous step
@@ -182,13 +160,13 @@ jobs:
         if: ${{ env.APEX_TESTS != 'all' }}
         run: |
           echo ${{env.APEX_TESTS}}
-          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunSpecifiedTests --tests ${{env.APEX_TESTS}} -w 30 --coverage-formatters lcovonly --verbose
+          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunSpecifiedTests --tests ${{env.APEX_TESTS}} -w 30
 
       # If the env variable equals all, we run all tests
       - name: "Dry-run deploy delta changes - run all tests"
         if: ${{ env.APEX_TESTS == 'all' }}
         run: |
-          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30 --coverage-formatters cobertura --verbose
+          sf project deploy start --source-dir "changed-sources/force-app" --dry-run --test-level RunLocalTests -w 30
 
       - name: "Deploy destructive changes (if any)"
-        run: sfdx force:mdapi:deploy -d "changed-sources/destructiveChanges" --checkonly --ignorewarnings
+        run: sf project deploy start --source-dir "changed-sources/destructiveChanges" --dry-run --ignorewarnings
