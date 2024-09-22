@@ -13,7 +13,7 @@ jobs:
   deploy-branch-to-production-org:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/brave-hawk/salesforce_ci-cd:latest
+      image: ghcr.io/brave-hawk/salesforce_ci-cd:latest-slim
       credentials:
         username: brave-hawk
         password: ${{ secrets.DOCKER_GHCR_TOKEN }}

@@ -28,7 +28,7 @@ jobs:
     # See: https://github.com/brave-hawk/Salesforce_CICD_Image?tab=readme-ov-file#salesforce_cicd_image
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/brave-hawk/salesforce_ci-cd:latest
+      image: ghcr.io/brave-hawk/salesforce_ci-cd:latest-slim
       credentials:
         username: brave-hawk
         password: ${{ secrets.DOCKER_GHCR_TOKEN }}
