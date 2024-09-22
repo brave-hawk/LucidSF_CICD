@@ -93,9 +93,8 @@ jobs:
           TESTS=$(cat testsToRun.txt)       
           echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-      # sfdx-git-delta and sfdx-scanner are already installed
-      # in our custom docker image
-      # seems it's not recognized in this run? Install again to test
+      # Install sfdx-git-delta
+      # To-do: why is the install in the dockerfile not recognized?
       - name: "Installing sfdx git delta"
         run: |
           echo y | sf plugins install sfdx-git-delta

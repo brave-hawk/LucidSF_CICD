@@ -29,6 +29,12 @@ jobs:
         with:
           fetch-depth: 0
 
+      # Install sfdx-git-delta
+      # To-do: why is the install in the dockerfile not recognized?
+      - name: "Installing sfdx git delta"
+        run: |
+          echo y | sf plugins install sfdx-git-delta
+
       # Store secret for production org
       - name: "Populate auth file with SFDX_URL secret of the production org"
         shell: bash
