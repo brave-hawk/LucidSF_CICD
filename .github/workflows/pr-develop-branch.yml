@@ -45,6 +45,9 @@ jobs:
       # The safe folder can be found in your actions log
       # Otherwise, you might have the following error:
       # "error": "--to is not a valid sha pointer: 'HEAD'
+      - name: "Run splash intro"
+        run: /usr/local/bin/entrypoint.sh
+
       - name: "Set safe folder"
         run: git config --global --add safe.directory /__w/LucidSF_CICD/LucidSF_CICD
 
