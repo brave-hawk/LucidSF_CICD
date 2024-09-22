@@ -2,7 +2,7 @@
  * @description       :
  * @author            : RMUN
  * @group             :
- * @last modified on  : 21-09-2024
+ * @last modified on  : 22-09-2024
  * @last modified by  : RMUN
  **/
 @isTest
@@ -33,7 +33,7 @@ private class SOQLRecipes_Test {
       System.Assert.areEqual(
         1,
         testAccounts.size(),
-        'Expected to find one account....'
+        'Expected to find one account.....'
       );
     }
   }
