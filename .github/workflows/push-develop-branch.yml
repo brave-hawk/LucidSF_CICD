@@ -51,7 +51,7 @@ jobs:
         run: sf org login sfdx-url -f ./SFDX_INTEGRATION_URL.txt -s -a integration
 
       - name: "Deploy the entire branch to Integration org"
-        run: sf project deploy start --source-dir force-app --testlevel RunLocalTests --verbose
+        run: sf project deploy start --source-dir force-app --test-level RunLocalTests --verbose
 
       - name: "Deploy destructive changes (if any) to Integration org"
         run: sf project deploy start --metadata-dir "changed-sources/destructiveChanges" --checkonly --ignorewarnings
