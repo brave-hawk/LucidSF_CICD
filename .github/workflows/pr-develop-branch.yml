@@ -22,10 +22,10 @@ on:
 jobs:
   # This is the name of the job. You can give it whatever name you want
   validate-deployment-on-integration-org:
-    # As mentioned in the blog post, this job runs inside a VM. Here we
-    # can specify which OS this VM should run on.
-    # In this case, we are going to run our commands on the latest version
-    # of ubuntu
+    # This job runs inside a VM.
+    # We are going to run our commands on the latest Ubuntu version
+    # We use our version of the salesforce cli-image with some pre-installed packages
+    # See: https://github.com/brave-hawk/Salesforce_CICD_Image?tab=readme-ov-file#salesforce_cicd_image
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/brave-hawk/salesforce_ci-cd:latest
@@ -34,11 +34,6 @@ jobs:
         password: ${{ secrets.DOCKER_GHCR_TOKEN }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
-      # The idea is that the VM can access your remote repository
-      # because your repository is an sfdx project.
-      # This is a default action that allows us to enter the root
-      # directory of the repository
-
       # Make sure to specify fetch-depth:0. This allows us to
       # access previous commits that have been pushed to the repository.
 
@@ -95,24 +90,14 @@ jobs:
           TESTS=$(cat testsToRun.txt)       
           echo "APEX_TESTS=$TESTS" >> $GITHUB_ENV
 
-      # Then we install the SFDX-Git-Delta plugin - https://github.com/scolladon/sfdx-git-delta
-      # This is an awesome plugin that allows us to extract a package.xml with the metadata
-      # that has changed between commits. I highly recommend going over the github readme
-      # for more information on how this works.
-
-      - name: "Installing sfdx git delta"
-        run: |
-          echo y | sf plugins install sfdx-git-delta
-
-      # Install SFDX scanner
-      - name: "Installing SFDX scanner"
-        run: sf plugins install @salesforce/sfdx-scanner
+      # sfdx-git-detlta and sfdx-scanner are already installed
+      # in our custom docker image
 
       # Prior to setting up this workflow, you have to create a Github Secret
       # that contains the sfdx url of the integration/qa org.
 
       # The steps to generate the url are here
-      # https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference_auth_sfdxurl.htm
+      # https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_auth_url.htm
 
       # This URL can then be used with the sf org login sfdx-url to authenticate
       # the sfdx project in the repositry, against the org from which the URL
