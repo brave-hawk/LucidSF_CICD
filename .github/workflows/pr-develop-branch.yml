@@ -28,7 +28,10 @@ jobs:
     # of ubuntu
     runs-on: ubuntu-latest
     container:
-      image: salesforce/cli:latest-full
+      image: ghcr.io/brave-hawk/salesforce_ci-cd:latest
+      credentials:
+        username: brave-hawk
+        password: ${{ secrets.DOCKER_GHCR_TOKEN }}
     if: ${{ github.actor != 'dependabot[bot]' }}
     steps:
       # The idea is that the VM can access your remote repository
